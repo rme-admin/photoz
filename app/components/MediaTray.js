@@ -197,7 +197,7 @@ function TrayItem({
             <label className={styles.itemColorPickerWrap} title={item.borderColor ? `Frame color: ${item.borderColor}` : 'Click to pick custom frame color'}>
               <input
                 type="color"
-                value={item.borderColor || '#2252cc'}
+                value={item.borderColor || '#ff6b00'}
                 onChange={(e) => onItemBorderColorChange && onItemBorderColorChange(item.id, e.target.value)}
                 className={styles.itemColorInput}
               />
@@ -206,7 +206,7 @@ function TrayItem({
                 style={{
                   backgroundColor: item.borderColor || 'transparent',
                   backgroundImage: !item.borderColor
-                    ? 'conic-gradient(#2252cc, #e11d48, #059669, #d97706, #7c3aed, #2252cc)'
+                    ? 'conic-gradient(#ff6b00, #e11d48, #059669, #d97706, #7c3aed, #ff6b00)'
                     : 'none',
                 }}
               />

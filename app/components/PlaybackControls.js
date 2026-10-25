@@ -12,12 +12,13 @@ import styles from './PlaybackControls.module.css';
 
 // ── Curated Scrapbook Border Color Presets ──────────────────────────────────
 export const PRESET_BORDER_COLORS = [
-  { name: 'Royal Blue',     value: '#2252cc', darkCheck: false },
+  { name: 'Flame Orange',   value: '#ff6b00', darkCheck: false },
+  { name: 'Sunset Orange',  value: '#ea580c', darkCheck: false },
+  { name: 'Sunny Gold',     value: '#d97706', darkCheck: false },
   { name: 'Crimson Rose',   value: '#e11d48', darkCheck: false },
   { name: 'Emerald Green',  value: '#059669', darkCheck: false },
-  { name: 'Sunny Gold',     value: '#d97706', darkCheck: false },
+  { name: 'Royal Blue',     value: '#2252cc', darkCheck: false },
   { name: 'Lavender Violet',value: '#7c3aed', darkCheck: false },
-  { name: 'Sunset Orange',  value: '#ea580c', darkCheck: false },
   { name: 'Bubblegum Pink', value: '#db2777', darkCheck: false },
   { name: 'Slate Charcoal', value: '#1e293b', darkCheck: false },
   { name: 'Polaroid White', value: '#ffffff', darkCheck: true  },
@@ -38,7 +39,7 @@ export default function PlaybackControls({
   showGallery,
   onToggleGallery,
   itemCount,
-  borderColor = '#2252cc',
+  borderColor = '#ff6b00',
   onBorderColorChange,
   colorMode = 'multi',
   onColorModeChange,

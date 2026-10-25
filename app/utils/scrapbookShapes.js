@@ -2,19 +2,19 @@
 
 // ── 1. Curated Palette for Multi-Color Frames ─────────────────────────────────
 export const MULTI_FRAME_COLORS = [
-  '#2252cc', // Royal Blue
+  '#ff6b00', // IR Flame Orange
+  '#ea580c', // Sunset Tangerine
+  '#d97706', // Warm Amber
   '#e11d48', // Crimson Rose
   '#059669', // Emerald Green
-  '#d97706', // Warm Amber
+  '#2252cc', // Royal Blue
   '#7c3aed', // Purple Violet
-  '#ea580c', // Sunset Tangerine
-  '#0284c7', // Sky Azure
   '#db2777', // Hot Pink
 ];
 
 export function getFrameColor(item, index, colorMode, globalColor) {
   if (item && item.borderColor) return item.borderColor;
-  if (colorMode === 'single') return globalColor || '#2252cc';
+  if (colorMode === 'single') return globalColor || '#ff6b00';
   return MULTI_FRAME_COLORS[index % MULTI_FRAME_COLORS.length];
 }
 

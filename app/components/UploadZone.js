@@ -34,10 +34,10 @@ export default function UploadZone({ onFilesAdded }) {
     >
       <div className={styles.iconWrap}>
         <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="32" cy="32" r="30" fill="rgba(79,142,247,0.12)" stroke="rgba(79,142,247,0.5)" strokeWidth="2" />
-          <path d="M32 20 L32 44" stroke="#4f8ef7" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M21 31 L32 20 L43 31" stroke="#4f8ef7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M20 46 L44 46" stroke="rgba(79,142,247,0.4)" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="32" cy="32" r="30" fill="rgba(255,107,0,0.12)" stroke="rgba(255,107,0,0.5)" strokeWidth="2" />
+          <path d="M32 20 L32 44" stroke="#ff6b00" strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M21 31 L32 20 L43 31" stroke="#ff6b00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M20 46 L44 46" stroke="rgba(255,107,0,0.4)" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </div>
       <h2 className={styles.title}>Drop your memories here</h2>

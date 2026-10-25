@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- IR-INFOTECH Flame Orange Gradient -->
+    <linearGradient id="irGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7a1a"/>
+      <stop offset="50%" stop-color="#ff5500"/>
+      <stop offset="100%" stop-color="#d93800"/>
+    </linearGradient>
+
+    <!-- Subtle Drop Shadow -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+
+    <linearGradient id="photoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141824"/>
+      <stop offset="100%" stop-color="#08090d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Rounded Squircle -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#irGradient)"/>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="13.5" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2"/>
+
+  <!-- Back Photo Frame (slightly tilted) -->
+  <g transform="rotate(10 38 32)">
+    <rect x="26" y="22" width="28" height="22" rx="3" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
+    <rect x="29" y="25" width="22" height="13" rx="1.5" fill="rgba(180,50,0,0.5)"/>
+  </g>
+
+  <!-- Front Crisp Polaroid Photo Frame -->
+  <g filter="url(#softShadow)">
+    <rect x="11" y="14" width="31" height="34" rx="3.5" fill="#ffffff"/>
+    <rect x="14" y="17" width="25" height="20" rx="2" fill="url(#photoGrad)"/>
+
+    <!-- Sun / Aperture spark -->
+    <circle cx="19" cy="22" r="2.5" fill="#ffaa40"/>
+
+    <!-- Mountain Landscape Waves -->
+    <path d="M14 37 L20 28 L27 33 L32 27 L39 37 Z" fill="#ff6b00"/>
+    <path d="M25 37 L31 29 L39 36 L39 37 Z" fill="#d93800"/>
+
+    <!-- Polaroid bottom dot / heart -->
+    <circle cx="26.5" cy="42" r="1.2" fill="#ff5500"/>
+  </g>
+
+  <!-- IR Innovation Spark in top right -->
+  <path d="M50 11 L51.2 14.5 L55 15.5 L51.2 16.5 L50 20 L48.8 16.5 L45 15.5 L48.8 14.5 Z" fill="#ffffff"/>
+  <circle cx="50" cy="15.5" r="1" fill="#ffe066"/>
+</svg>

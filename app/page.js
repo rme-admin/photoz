@@ -32,7 +32,7 @@ export default function Home() {
   const [showGallery,     setShowGallery]     = useState(false);
   const [selectedId,      setSelectedId]      = useState(null);
   const [showUpload,      setShowUpload]      = useState(true);
-  const [borderColor,     setBorderColor]     = useState('#2252cc');
+  const [borderColor,     setBorderColor]     = useState('#ff6b00');
   const [colorMode,       setColorMode]       = useState('multi'); // 'multi' | 'single'
   const [shapeMode,       setShapeMode]       = useState('classic');// 'classic' | 'random'
   const [classicStyle,    setClassicStyle]    = useState('rounded'); // 'rounded' | 'rect' | 'paper-frame' | 'no-border' | 'paper-piece' | 'oval'
@@ -249,8 +249,8 @@ export default function Home() {
                 <circle cx="11" cy="14" r="1.5" fill="white"/>
                 <defs>
                   <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40">
-                    <stop stopColor="#4f8ef7"/>
-                    <stop offset="1" stopColor="#7b5ea7"/>
+                    <stop stopColor="#ff7a1a"/>
+                    <stop offset="1" stopColor="#ff4500"/>
                   </linearGradient>
                 </defs>
               </svg>
@@ -290,49 +290,53 @@ export default function Home() {
             Add Media
           </label>
 
-          <button
-            type="button"
-            className={styles.headerShareBtn}
-            onClick={handleHeaderShareClick}
-            title="Share Edited Video with Comment"
-            id="header-share-btn"
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
-            <span>Share Video</span>
-          </button>
-
-          <button
-            type="button"
-            className={`${styles.headerExportBtn} ${exportStatus.isExporting ? styles.exporting : ''}`}
-            onClick={handleHeaderExportClick}
-            id="header-export-btn"
-            title={
-              exportStatus.isExporting
-                ? 'Click to cancel export'
-                : 'Export Video'
-            }
-          >
-            {exportStatus.isExporting ? (
-              <>
-                <div className={styles.spinner} />
-                <span>Exporting ({exportStatus.progress}%)</span>
-              </>
-            ) : (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <polygon points="23 7 16 12 23 17 23 7"/>
-                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          {items.length > 0 && (
+            <>
+              <button
+                type="button"
+                className={styles.headerShareBtn}
+                onClick={handleHeaderShareClick}
+                title="Share Edited Video with Comment"
+                id="header-share-btn"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                 </svg>
-                <span>Export Video</span>
-              </>
-            )}
-          </button>
+                <span>Share Video</span>
+              </button>
+
+              <button
+                type="button"
+                className={`${styles.headerExportBtn} ${exportStatus.isExporting ? styles.exporting : ''}`}
+                onClick={handleHeaderExportClick}
+                id="header-export-btn"
+                title={
+                  exportStatus.isExporting
+                    ? 'Click to cancel export'
+                    : 'Export Video'
+                }
+              >
+                {exportStatus.isExporting ? (
+                  <>
+                    <div className={styles.spinner} />
+                    <span>Exporting ({exportStatus.progress}%)</span>
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polygon points="23 7 16 12 23 17 23 7"/>
+                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                    </svg>
+                    <span>Export Video</span>
+                  </>
+                )}
+              </button>
+            </>
+          )}
         </div>
       </header>
 
@@ -580,8 +584,8 @@ export default function Home() {
                     <circle cx="11" cy="14" r="1.5" fill="white"/>
                     <defs>
                       <linearGradient id="gradDrawer" x1="0" y1="0" x2="40" y2="40">
-                        <stop stopColor="#4f8ef7"/>
-                        <stop offset="1" stopColor="#7b5ea7"/>
+                        <stop stopColor="#ff7a1a"/>
+                        <stop offset="1" stopColor="#ff4500"/>
                       </linearGradient>
                     </defs>
                   </svg>
@@ -724,7 +728,7 @@ export default function Home() {
               {infoModal === 'about' && (
                 <>
                   <p>
-                    <strong>Photoz by IR-INFOTECH</strong> (hosted at <a href="https://photoz.irinfotech.com" target="_blank" rel="noopener noreferrer" style={{ color: '#38bdf8' }}>photoz.irinfotech.com</a>) is a high-performance scrapbook video creator.
+                    <strong>Photoz by IR-INFOTECH</strong> (hosted at <a href="https://photoz.irinfotech.com" target="_blank" rel="noopener noreferrer" style={{ color: '#ff8533' }}>photoz.irinfotech.com</a>) is a high-performance scrapbook video creator.
                   </p>
                   <h3>Zero-Cloud, 100% Private Philosophy</h3>
                   <ul>
@@ -768,7 +772,7 @@ export default function Home() {
               {infoModal === 'terms' && (
                 <>
                   <p>
-                    Welcome to <strong>Photoz</strong> (<a href="https://photoz.irinfotech.com" target="_blank" rel="noopener noreferrer" style={{ color: '#38bdf8' }}>photoz.irinfotech.com</a>), powered by <strong>IR-INFOTECH</strong>.
+                    Welcome to <strong>Photoz</strong> (<a href="https://photoz.irinfotech.com" target="_blank" rel="noopener noreferrer" style={{ color: '#ff8533' }}>photoz.irinfotech.com</a>), powered by <strong>IR-INFOTECH</strong>.
                   </p>
                   <h3>1. 100% Free For All</h3>
                   <p>
@@ -820,30 +824,33 @@ export default function Home() {
 
       {/* ── App Footer ── */}
       <footer className={styles.appFooter}>
-        <div className={styles.appFooterMain}>
-          <span>Photoz by IR-INFOTECH</span>
+        <div className={styles.appFooterTop}>
+          <span>Powered by <strong>IR-INFOTECH</strong></span>
           <span>•</span>
           <a
-            href="https://photoz.irinfotech.com"
+            href="https://www.irinfotech.com"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.appFooterDomain}
+            className={styles.appFooterLink}
           >
-            photoz.irinfotech.com
+            www.irinfotech.com
           </a>
-          <span>•</span>
-          <span>Copyright © 2026</span>
-          <span>•</span>
-          <span>Powered by IR-INFOTECH</span>
         </div>
-        <div className={styles.appFooterBadges}>
-          <span className={styles.appFooterBadgeItem}>🛡️ Keep your data with you</span>
-          <span>•</span>
-          <span className={styles.appFooterBadgeItem}>⚡ No server-side processing</span>
-          <span>•</span>
-          <span className={styles.appFooterBadgeItem}>🔒 No cloud upload</span>
-          <span>•</span>
-          <span className={styles.appFooterBadgeItem}>✨ Without watermark</span>
+        <div className={styles.appFooterSupport}>
+          support mail:{' '}
+          <a href="mailto:support@irinfotech.com" className={styles.appFooterLink}>
+            support@irinfotech.com
+          </a>{' '}
+          for any site related issues or bugs
+        </div>
+        <div className={styles.appFooterCopy}>
+          copyright 2026
+        </div>
+        <div className={styles.appFooterTags}>
+          <span>#No Watermark</span>
+          <span>#KeepYourDataSafe</span>
+          <span>#NoServerSideProcessing</span>
+          <span>#NoCloudUploads</span>
         </div>
       </footer>
     </div>

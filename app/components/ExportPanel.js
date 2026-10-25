@@ -18,18 +18,46 @@ function getBestVideoMimeType() {
     return { mime: 'video/webm', ext: 'webm', label: 'WebM' };
   }
 
-  const candidates = [
-    { mime: 'video/mp4;codecs=avc1', ext: 'mp4', label: 'MP4 (H.264)' },
-    { mime: 'video/mp4', ext: 'mp4', label: 'MP4' },
-    { mime: 'video/webm;codecs=vp9', ext: 'webm', label: 'WebM (VP9)' },
-    { mime: 'video/webm;codecs=vp8', ext: 'webm', label: 'WebM (VP8)' },
-    { mime: 'video/webm', ext: 'webm', label: 'WebM' },
-  ];
+  const isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+  const isIOS = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  let candidates;
+  if (isAndroid) {
+    // On Android, WebM VP9/VP8 uses native hardware video encoders that won't crash GPU process at 1080p/2K
+    candidates = [
+      { mime: 'video/webm;codecs=vp9,opus', ext: 'webm', label: 'WebM (VP9)' },
+      { mime: 'video/webm;codecs=vp9',      ext: 'webm', label: 'WebM (VP9)' },
+      { mime: 'video/webm;codecs=vp8,opus', ext: 'webm', label: 'WebM (VP8)' },
+      { mime: 'video/webm;codecs=vp8',      ext: 'webm', label: 'WebM (VP8)' },
+      { mime: 'video/webm',                 ext: 'webm', label: 'WebM' },
+      { mime: 'video/mp4;codecs=avc1',      ext: 'mp4',  label: 'MP4 (H.264)' },
+      { mime: 'video/mp4',                  ext: 'mp4',  label: 'MP4' },
+    ];
+  } else if (isIOS) {
+    // iOS Safari only supports MP4 (H.264) in MediaRecorder
+    candidates = [
+      { mime: 'video/mp4;codecs=avc1', ext: 'mp4', label: 'MP4 (H.264)' },
+      { mime: 'video/mp4',             ext: 'mp4', label: 'MP4' },
+      { mime: 'video/webm;codecs=vp9', ext: 'webm', label: 'WebM (VP9)' },
+      { mime: 'video/webm',             ext: 'webm', label: 'WebM' },
+    ];
+  } else {
+    // Desktop browsers
+    candidates = [
+      { mime: 'video/mp4;codecs=avc1', ext: 'mp4', label: 'MP4 (H.264)' },
+      { mime: 'video/mp4',             ext: 'mp4', label: 'MP4' },
+      { mime: 'video/webm;codecs=vp9', ext: 'webm', label: 'WebM (VP9)' },
+      { mime: 'video/webm;codecs=vp8', ext: 'webm', label: 'WebM (VP8)' },
+      { mime: 'video/webm',             ext: 'webm', label: 'WebM' },
+    ];
+  }
 
   for (const c of candidates) {
-    if (MediaRecorder.isTypeSupported(c.mime)) {
-      return c;
-    }
+    try {
+      if (MediaRecorder.isTypeSupported(c.mime)) {
+        return c;
+      }
+    } catch (e) {}
   }
 
   return { mime: 'video/webm', ext: 'webm', label: 'WebM' };
@@ -144,11 +172,34 @@ async function preloadMedia(items) {
           }
           img.src = item.src;
           img.onload = () => {
+            const maxDim = 1920;
+            let finalEl = img;
+            let finalW = img.naturalWidth || 640;
+            let finalH = img.naturalHeight || 480;
+
+            // Downscale giant mobile camera photos (e.g. 12MP/50MP) to max 1920px
+            // Saves hundreds of megabytes of GPU texture memory on mobile devices
+            if (finalW > maxDim || finalH > maxDim) {
+              try {
+                const scale = Math.min(maxDim / finalW, maxDim / finalH);
+                const targetW = Math.round(finalW * scale);
+                const targetH = Math.round(finalH * scale);
+                const off = document.createElement('canvas');
+                off.width = targetW;
+                off.height = targetH;
+                const octx = off.getContext('2d');
+                octx.drawImage(img, 0, 0, targetW, targetH);
+                finalEl = off;
+                finalW = targetW;
+                finalH = targetH;
+              } catch (e) {}
+            }
+
             resolve({
               ...item,
-              el: img,
-              width: img.naturalWidth || 640,
-              height: img.naturalHeight || 480,
+              el: finalEl,
+              width: finalW,
+              height: finalH,
             });
           };
           img.onerror = () => {
@@ -236,7 +287,7 @@ function drawSmile(ctx, cx, cy, r, color = '#3a6fe8') {
   ctx.restore();
 }
 
-function drawSparkle(ctx, cx, cy, r, color = '#4f8ef7') {
+function drawSparkle(ctx, cx, cy, r, color = '#ff6b00') {
   ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = 2.5;
@@ -267,18 +318,15 @@ function drawWashiTape(ctx, x, y, w, h, angle, color) {
 }
 
 // 3. Top and bottom fade masks
-function drawFadeMasks(ctx, W, H) {
-  const topGrad = ctx.createLinearGradient(0, 0, 0, H * 0.10);
-  topGrad.addColorStop(0, '#f5f0e8');
-  topGrad.addColorStop(1, 'rgba(245, 240, 232, 0)');
-  ctx.fillStyle = topGrad;
-  ctx.fillRect(0, 0, W, H * 0.10);
-
-  const botGrad = ctx.createLinearGradient(0, H * 0.90, 0, H);
-  botGrad.addColorStop(0, 'rgba(245, 240, 232, 0)');
-  botGrad.addColorStop(1, '#f5f0e8');
-  ctx.fillStyle = botGrad;
-  ctx.fillRect(0, H * 0.90, W, H * 0.10);
+function drawFadeMasks(ctx, W, H, topGrad, botGrad) {
+  if (topGrad) {
+    ctx.fillStyle = topGrad;
+    ctx.fillRect(0, 0, W, H * 0.10);
+  }
+  if (botGrad) {
+    ctx.fillStyle = botGrad;
+    ctx.fillRect(0, H * 0.90, W, H * 0.10);
+  }
 }
 
 // 4. Draw Gallery Wall (Grand Finale / end.png style)
@@ -328,9 +376,9 @@ function drawGalleryWall(ctx, items, W, H, alpha = 1) {
     ctx.translate(cx, cy);
     ctx.rotate((rotate * Math.PI) / 180);
 
-    // Frame drop shadow
-    ctx.shadowColor = 'rgba(0,0,0,0.6)';
-    ctx.shadowBlur = 14;
+    // Frame drop shadow capped for mobile GPU stability
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = Math.min(10, Math.round(10 * (W / 720)));
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 4;
 
@@ -375,34 +423,34 @@ function darkenHex(hex, factor = 0.32) {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
-// ── Video Quality Presets ───────────────────────────────────────────────────
+// ── Video Quality Presets (Tuned for rock-solid mobile hardware encoding) ────
 export const QUALITY_PRESETS = {
   '720p': {
     id: '720p',
     label: '720p (HD)',
     width: 720,
     height: 1280,
-    bitrate: 4_500_000,
+    bitrate: 3_500_000,
     badge: 'HD · 720×1280',
-    desc: 'Fast export & compact file size',
+    desc: 'Fastest & light · Recommended for quick sharing',
   },
   '1080p': {
     id: '1080p',
     label: '1080p (Full HD)',
     width: 1080,
     height: 1920,
-    bitrate: 9_000_000,
+    bitrate: 5_500_000,
     badge: 'FHD · 1080×1920',
-    desc: 'Crisp & sharp · Recommended for Reels/TikTok',
+    desc: 'Crisp & sharp · Recommended for Reels/WhatsApp',
   },
   '1440p': {
     id: '1440p',
     label: '2K / 1440p (Ultra)',
     width: 1440,
     height: 2560,
-    bitrate: 16_000_000,
+    bitrate: 9_000_000,
     badge: '2K · 1440×2560',
-    desc: 'Maximum studio fidelity',
+    desc: 'Studio fidelity · High-performance devices',
   },
 };
 
@@ -564,7 +612,8 @@ const ExportPanel = forwardRef(function ExportPanel(
     }
   }, [postCommentText]);
 
-  const handleExport = useCallback(async () => {
+  const handleExport = useCallback(async (options = {}) => {
+    const autoShare = options?.autoShare || false;
     if (isExporting || items.length === 0) return;
 
     setIsExporting(true);
@@ -594,18 +643,54 @@ const ExportPanel = forwardRef(function ExportPanel(
         }
       });
 
-      // 2. Setup canvas at chosen quality resolution
+      // 2. Setup canvas with opaque context (saves 25% memory overhead on mobile)
       const W = qualityConfig.width;
       const H = qualityConfig.height;
       const scale = W / 720;
       canvas = document.createElement('canvas');
       canvas.width = W;
       canvas.height = H;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', {
+        alpha: false,
+        desynchronized: true,
+      });
 
-      // 3. Setup MediaStream & MediaRecorder (with optional background audio)
+      // Pre-render background grid once to an offscreen canvas (blazing fast GPU blitting!)
+      const bgCanvas = document.createElement('canvas');
+      bgCanvas.width = W;
+      bgCanvas.height = H;
+      const bgCtx = bgCanvas.getContext('2d', { alpha: false });
+      drawBackground(bgCtx, W, H, gridStyle);
+
+      // Pre-create top and bottom fade gradients
+      const topGrad = ctx.createLinearGradient(0, 0, 0, H * 0.10);
+      const fadeColor = gridStyle === 'dark' ? '#121520' : gridStyle === 'kraft' ? '#ebdcc6' : '#f5f0e8';
+      topGrad.addColorStop(0, fadeColor);
+      topGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+      const botGrad = ctx.createLinearGradient(0, H * 0.90, 0, H);
+      botGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      botGrad.addColorStop(1, fadeColor);
+
+      // 3. Setup MediaStream with deterministic frame-by-frame capture
       const mimeInfo = getBestVideoMimeType();
-      stream = canvas.captureStream(EXPORT_FPS);
+      let useRequestFrame = false;
+      let videoTrack = null;
+
+      try {
+        // captureStream(0) tells the browser not to poll continuously, but capture on track.requestFrame()
+        stream = canvas.captureStream(0);
+        videoTrack = stream.getVideoTracks()[0];
+        if (videoTrack && typeof videoTrack.requestFrame === 'function') {
+          useRequestFrame = true;
+        } else {
+          stream = canvas.captureStream(EXPORT_FPS);
+          videoTrack = stream.getVideoTracks()[0];
+        }
+      } catch (e) {
+        stream = canvas.captureStream(EXPORT_FPS);
+        videoTrack = stream.getVideoTracks()[0];
+      }
       streamRef.current = stream;
 
       if (audioEnabled) {
@@ -635,7 +720,14 @@ const ExportPanel = forwardRef(function ExportPanel(
         if (e.data && e.data.size > 0) chunks.push(e.data);
       };
 
-      recorder.start(100);
+      recorder.onerror = (e) => {
+        console.error('MediaRecorder error:', e);
+        setError(`Encoding error: ${e.error?.message || 'Device video encoder out of memory'}. Please try 720p or 1080p.`);
+        abortRef.current = true;
+      };
+
+      // 1000ms timeslice drastically cuts down native Blob object allocations on mobile
+      recorder.start(1000);
 
       // 4. Precompute card placement parameters for the escalator
       const cards = preloaded.map((item, i) => {
@@ -741,8 +833,8 @@ const ExportPanel = forwardRef(function ExportPanel(
         const t = f / escalatorFrames; // 0 to 1
         const scrollY = t * totalDistance;
 
-        // Draw Paper Background with the chosen grid style
-        drawBackground(ctx, W, H, gridStyle);
+        // Blit pre-rendered background instantly (1 GPU call instead of hundreds of path draws!)
+        ctx.drawImage(bgCanvas, 0, 0);
 
         // Draw each card that is currently inside viewport
         cards.forEach((c, idx) => {
@@ -768,12 +860,12 @@ const ExportPanel = forwardRef(function ExportPanel(
           const rh = c.dh;
           const bw = Math.max(3, Math.round(8 * scale)); // scaled border width
 
-          // 1. Drop shadow behind the card shape
+          // 1. Drop shadow behind the card shape (Capped blur to prevent GPU memory exhaustion)
           ctx.save();
           ctx.shadowColor = 'rgba(0, 0, 0, 0.28)';
-          ctx.shadowBlur = Math.round(18 * scale);
-          ctx.shadowOffsetX = Math.round(4 * scale);
-          ctx.shadowOffsetY = Math.round(6 * scale);
+          ctx.shadowBlur = Math.min(10, Math.round(8 * scale));
+          ctx.shadowOffsetX = Math.round(3 * scale);
+          ctx.shadowOffsetY = Math.round(4 * scale);
           c.shape.draw(ctx, rx, ry, rw, rh);
           ctx.fillStyle = '#ffffff';
           ctx.fill();
@@ -882,11 +974,21 @@ const ExportPanel = forwardRef(function ExportPanel(
         });
 
         // Draw top & bottom fade gradients
-        drawFadeMasks(ctx, W, H);
+        drawFadeMasks(ctx, W, H, topGrad, botGrad);
+
+        // Deterministically capture frame
+        if (useRequestFrame && videoTrack && typeof videoTrack.requestFrame === 'function') {
+          videoTrack.requestFrame();
+        }
 
         // Progress update
         setProgress(Math.round((f / totalFrames) * 85));
-        await sleep(frameDelay);
+
+        // Periodic micro-yield every 4 frames so mobile browser & GC never get starved
+        if (f % 4 === 0) {
+          await new Promise((r) => requestAnimationFrame(r));
+        }
+        await sleep(useRequestFrame ? Math.max(10, Math.floor(frameDelay * 0.75)) : frameDelay);
       }
 
       // ── SCENE 2: Gallery Wall (Grand Finale) ────────────────────────────────
@@ -900,8 +1002,15 @@ const ExportPanel = forwardRef(function ExportPanel(
           const alpha = gf < crossfadeFrames ? gf / crossfadeFrames : 1;
           drawGalleryWall(ctx, cards.map((c) => c.item), W, H, alpha);
 
+          if (useRequestFrame && videoTrack && typeof videoTrack.requestFrame === 'function') {
+            videoTrack.requestFrame();
+          }
+
           setProgress(Math.min(96, Math.round(((escalatorFrames + gf) / totalFrames) * 96)));
-          await sleep(frameDelay);
+          if (gf % 4 === 0) {
+            await new Promise((r) => requestAnimationFrame(r));
+          }
+          await sleep(useRequestFrame ? Math.max(10, Math.floor(frameDelay * 0.75)) : frameDelay);
         }
       }
 
@@ -910,10 +1019,16 @@ const ExportPanel = forwardRef(function ExportPanel(
       setProgress(98);
 
       if (recorder.state !== 'inactive') {
+        // Request one last frame to flush any pending buffer
+        if (useRequestFrame && videoTrack && typeof videoTrack.requestFrame === 'function') {
+          videoTrack.requestFrame();
+        }
+        await sleep(150);
+
         await new Promise((resolve) => {
           recorder.onstop = resolve;
           // Fallback timer so it never hangs
-          setTimeout(resolve, 3000);
+          setTimeout(resolve, 4000);
           try {
             recorder.stop();
           } catch (e) {
@@ -953,6 +1068,10 @@ const ExportPanel = forwardRef(function ExportPanel(
       setProgress(100);
       setStatus('Export complete!');
       setDone(true);
+
+      if (autoShare) {
+        handleShareVideoWithFile(fileObj);
+      }
     } catch (err) {
       console.error('Export error:', err);
       setError(err.message || 'Export encountered an error. Please try again.');
@@ -1048,9 +1167,11 @@ const ExportPanel = forwardRef(function ExportPanel(
         if (exportedFile?.blob) {
           setDone(true);
           setIsOpen(true);
+          handleShareVideoWithFile(exportedFile);
         } else {
           setModalMode('share');
           setIsOpen(true);
+          handleExport({ autoShare: true });
         }
       },
       triggerExport: () => {
