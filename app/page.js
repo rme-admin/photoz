@@ -401,7 +401,7 @@ export default function Home() {
               <span>or</span>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className={styles.sampleBigBtnWrap}>
               <button
                 type="button"
                 className={styles.sampleBigBtn}

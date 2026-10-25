@@ -84,3 +84,33 @@
 .hiddenInput {
   display: none;
 }
+
+@media (max-width: 600px) {
+  .zone {
+    padding: 34px 16px;
+    border-radius: 16px;
+  }
+
+  .iconWrap {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 14px;
+  }
+
+  .title {
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    padding: 11px 22px;
+    font-size: 0.9rem;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}

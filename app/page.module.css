@@ -230,8 +230,16 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding-top: 16px;
+  gap: 26px;
+  padding: 20px 20px 50px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sampleBigBtnWrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .uploadHeadline {
@@ -987,8 +995,98 @@
     overflow: hidden !important;
   }
 
+  /* ── UPLOAD SCREEN ON MOBILE (Guarantees generous edge/corner space) ── */
+  .uploadScreen {
+    padding: 16px 16px 48px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    gap: 18px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .uploadHeadline {
+    padding: 0 6px;
+  }
+
+  .uploadTitle {
+    font-size: 1.65rem;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+
+  .uploadDesc {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    padding: 0 4px;
+  }
+
+  .privacyNoticeBanner {
+    padding: 12px 14px;
+    gap: 10px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    border-radius: 12px;
+    margin: 2px 0 10px;
+    box-sizing: border-box;
+  }
+
+  .privacyNoticeIcon {
+    font-size: 1.35rem;
+  }
+
+  .sampleBigBtnWrap {
+    width: 100%;
+  }
+
+  .sampleBigBtn {
+    width: 100%;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 0.88rem;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .trustGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .trustCard {
+    padding: 13px 14px;
+    border-radius: 12px;
+    gap: 10px;
+  }
+
+  .trustCardTitle {
+    font-size: 0.85rem;
+  }
+
+  .trustCardDesc {
+    font-size: 0.76rem;
+  }
+
   .featureGrid {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .featureCard {
+    padding: 13px 14px;
+    border-radius: 12px;
+    gap: 10px;
+  }
+
+  .appFooter {
+    padding: 20px 16px 36px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    font-size: 0.76rem;
+    gap: 8px;
   }
 }
 

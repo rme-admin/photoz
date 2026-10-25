@@ -15,42 +15,21 @@ const EXPORT_FPS = 30;
 // ── Check best supported video MIME type and extension ──────────────────────
 function getBestVideoMimeType() {
   if (typeof MediaRecorder === 'undefined') {
-    return { mime: 'video/webm', ext: 'webm', label: 'WebM' };
+    return { mime: 'video/mp4', ext: 'mp4', label: 'MP4' };
   }
 
-  const isAndroid = typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
-  const isIOS = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  let candidates;
-  if (isAndroid) {
-    // On Android, WebM VP9/VP8 uses native hardware video encoders that won't crash GPU process at 1080p/2K
-    candidates = [
-      { mime: 'video/webm;codecs=vp9,opus', ext: 'webm', label: 'WebM (VP9)' },
-      { mime: 'video/webm;codecs=vp9',      ext: 'webm', label: 'WebM (VP9)' },
-      { mime: 'video/webm;codecs=vp8,opus', ext: 'webm', label: 'WebM (VP8)' },
-      { mime: 'video/webm;codecs=vp8',      ext: 'webm', label: 'WebM (VP8)' },
-      { mime: 'video/webm',                 ext: 'webm', label: 'WebM' },
-      { mime: 'video/mp4;codecs=avc1',      ext: 'mp4',  label: 'MP4 (H.264)' },
-      { mime: 'video/mp4',                  ext: 'mp4',  label: 'MP4' },
-    ];
-  } else if (isIOS) {
-    // iOS Safari only supports MP4 (H.264) in MediaRecorder
-    candidates = [
-      { mime: 'video/mp4;codecs=avc1', ext: 'mp4', label: 'MP4 (H.264)' },
-      { mime: 'video/mp4',             ext: 'mp4', label: 'MP4' },
-      { mime: 'video/webm;codecs=vp9', ext: 'webm', label: 'WebM (VP9)' },
-      { mime: 'video/webm',             ext: 'webm', label: 'WebM' },
-    ];
-  } else {
-    // Desktop browsers
-    candidates = [
-      { mime: 'video/mp4;codecs=avc1', ext: 'mp4', label: 'MP4 (H.264)' },
-      { mime: 'video/mp4',             ext: 'mp4', label: 'MP4' },
-      { mime: 'video/webm;codecs=vp9', ext: 'webm', label: 'WebM (VP9)' },
-      { mime: 'video/webm;codecs=vp8', ext: 'webm', label: 'WebM (VP8)' },
-      { mime: 'video/webm',             ext: 'webm', label: 'WebM' },
-    ];
-  }
+  // Prioritize universal MP4 (H.264) across all platforms (Android, iOS, PC, Mac)
+  // Fall back to WebM only if browser doesn't support MP4 recording (e.g. older Firefox)
+  const candidates = [
+    { mime: 'video/mp4;codecs=avc1,mp4a.40.2', ext: 'mp4',  label: 'MP4 (H.264)' },
+    { mime: 'video/mp4;codecs=avc1',           ext: 'mp4',  label: 'MP4 (H.264)' },
+    { mime: 'video/mp4',                       ext: 'mp4',  label: 'MP4' },
+    { mime: 'video/webm;codecs=vp9,opus',      ext: 'webm', label: 'WebM (VP9)' },
+    { mime: 'video/webm;codecs=vp9',           ext: 'webm', label: 'WebM (VP9)' },
+    { mime: 'video/webm;codecs=vp8,opus',      ext: 'webm', label: 'WebM (VP8)' },
+    { mime: 'video/webm;codecs=vp8',           ext: 'webm', label: 'WebM (VP8)' },
+    { mime: 'video/webm',                      ext: 'webm', label: 'WebM' },
+  ];
 
   for (const c of candidates) {
     try {
@@ -60,7 +39,7 @@ function getBestVideoMimeType() {
     } catch (e) {}
   }
 
-  return { mime: 'video/webm', ext: 'webm', label: 'WebM' };
+  return { mime: 'video/mp4', ext: 'mp4', label: 'MP4' };
 }
 
 // ── Contain fit: scale source into (dstW × dstH) preserving ratio ───────────
@@ -474,7 +453,12 @@ const ExportPanel = forwardRef(function ExportPanel(
 ) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalMode, setModalMode] = useState('export'); // 'export' | 'share'
-  const [selectedQuality, setSelectedQuality] = useState(initialQuality || '1080p');
+  const [selectedQuality, setSelectedQuality] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 900) {
+      return '720p';
+    }
+    return initialQuality || '1080p';
+  });
   const [isExporting, setIsExporting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
@@ -1160,6 +1144,9 @@ const ExportPanel = forwardRef(function ExportPanel(
     ref,
     () => ({
       openModal: (options = {}) => {
+        if (typeof window !== 'undefined' && window.innerWidth <= 900) {
+          setSelectedQuality('720p');
+        }
         setModalMode(options?.mode || 'export');
         setIsOpen(true);
       },
@@ -1289,11 +1276,19 @@ const ExportPanel = forwardRef(function ExportPanel(
                       <span className={styles.qualityBadge}>{q.label.split(' ')[0]}</span>
                       <span className={styles.qualityRes}>{q.width}×{q.height}</span>
                       <span className={styles.qualityDesc}>
-                        {q.id === '1080p' ? 'Crisp (Reels)' : q.id === '1440p' ? 'Studio 2K' : 'Compact'}
+                        {q.id === '720p' ? 'Recommended' : q.id === '1080p' ? 'Full HD' : 'Studio 2K'}
                       </span>
                     </button>
                   );
                 })}
+              </div>
+
+              {/* Mobile Export Advice Statement */}
+              <div className={styles.mobileQualityTip}>
+                <span className={styles.mobileQualityTipIcon}>📱</span>
+                <div className={styles.mobileQualityTipText}>
+                  <strong>720p is recommended for phones:</strong> Phones may struggle to render properly on 1080p or 2K due to device memory limits. If your phone is high-end you can try 1080p or 2K; otherwise, it is better to stick to <strong>720p</strong> without loss of quality.
+                </div>
               </div>
             </div>
 
