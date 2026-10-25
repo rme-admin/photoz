@@ -1,0 +1,908 @@
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.06);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ── Transport row ── */
+.transport {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Gallery toggle */
+.galleryBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.galleryBtn:hover {
+  background: rgba(245,197,24,0.1);
+  border-color: rgba(245,197,24,0.3);
+  color: var(--accent-gold);
+}
+
+.galleryActive {
+  background: rgba(245,197,24,0.12) !important;
+  border-color: rgba(245,197,24,0.4) !important;
+  color: var(--accent-gold) !important;
+}
+
+/* Play/Pause */
+.playBtn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f8ef7, #7b5ea7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(79,142,247,0.4);
+  flex-shrink: 0;
+}
+
+.playBtn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.playBtn:hover:not(:disabled) {
+  transform: scale(1.08);
+  box-shadow: 0 8px 30px rgba(79,142,247,0.55);
+}
+
+.playBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.playing {
+  background: linear-gradient(135deg, #e91e8c, #f5c518);
+  box-shadow: 0 4px 20px rgba(233,30,140,0.35);
+}
+
+/* Item counter */
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 48px;
+}
+
+.counterNum {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+  line-height: 1;
+}
+
+.counterLabel {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Speed row ── */
+.speedRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.speedLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.speedValue {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--accent-blue);
+  background: rgba(79,142,247,0.1);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.speedSlider {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+  outline: none;
+  cursor: pointer;
+}
+
+.speedSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f8ef7, #7b5ea7);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(79,142,247,0.5);
+  transition: transform 0.15s;
+}
+
+.speedSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+.speedSlider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f8ef7, #7b5ea7);
+  cursor: pointer;
+  border: none;
+}
+
+.speedHints {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  padding: 0 2px;
+}
+
+/* ── Border color selector ── */
+.colorSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.colorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.colorTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.colorTitle svg {
+  color: var(--accent-blue);
+}
+
+.colorCurrentHex {
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.palette {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.colorSwatch {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  padding: 0;
+  outline: none;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.18);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.colorActive {
+  transform: scale(1.18);
+  box-shadow: 0 0 0 2px #0f172a, 0 0 0 4px #38bdf8;
+  border-color: #ffffff !important;
+}
+
+.customColorLabel {
+  position: relative;
+  cursor: pointer;
+  display: inline-flex;
+}
+
+.customColorInput {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.customColorBtn {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1.5px dashed rgba(255, 255, 255, 0.45);
+  transition: transform 0.15s ease;
+}
+
+.customColorBtn:hover {
+  transform: scale(1.18);
+  border-color: #ffffff;
+}
+
+/* ── Option Section Headers & Segmented Controls ── */
+.optionSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.optionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.optionTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.segmentBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.segmentBtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.segmentActive {
+  background: linear-gradient(135deg, rgba(79, 142, 247, 0.25) 0%, rgba(123, 94, 167, 0.3) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(79, 142, 247, 0.45);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.segmentTitle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.segmentSub {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* ── Background Grid Picker ── */
+.gridPicker {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gridBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gridBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(79, 142, 247, 0.35);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.gridBtnActive {
+  background: rgba(79, 142, 247, 0.2) !important;
+  border-color: rgba(79, 142, 247, 0.6) !important;
+  color: #38bdf8 !important;
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+}
+
+.gridIcon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.gridName {
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+/* ── Classic Frame Options Grid ── */
+.classicGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.classicOptionBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 8px 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.classicOptionBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(79, 142, 247, 0.35);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.classicOptionActive {
+  background: rgba(79, 142, 247, 0.2) !important;
+  border-color: rgba(79, 142, 247, 0.65) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 1px rgba(79, 142, 247, 0.4);
+}
+
+.classicOptionIcon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.classicOptionTitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  line-height: 1.2;
+}
+
+.classicOptionDesc {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  line-height: 1.15;
+}
+
+/* ── Random Shapes Multi-Select Filter ── */
+.shapesFilterWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  border-radius: 9px;
+}
+
+.shapesFilterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.toggleAllBtn {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toggleAllBtn:hover {
+  background: rgba(56, 189, 248, 0.22);
+}
+
+.shapesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.shapeChip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 3px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 7px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.shapeChip:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.shapeChipActive {
+  background: rgba(236, 72, 153, 0.18) !important;
+  border-color: rgba(236, 72, 153, 0.55) !important;
+  color: #f472b6 !important;
+  box-shadow: 0 0 0 1px rgba(236, 72, 153, 0.35);
+}
+
+.shapeChipIcon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.shapeChipName {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ── Video Quality Selector ── */
+.qualityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qualityBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qualityBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(79, 142, 247, 0.35);
+  color: #ffffff;
+}
+
+.qualityBtnActive {
+  background: rgba(79, 142, 247, 0.2) !important;
+  border-color: rgba(79, 142, 247, 0.65) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 1px rgba(79, 142, 247, 0.4);
+}
+
+.qualityBadge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.qualityRes {
+  font-size: 0.64rem;
+  font-family: ui-monospace, monospace;
+  color: #94a3b8;
+}
+
+.qualityDesc {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* ── Dedicated Upload Audio & Auto-Rewind Controls ── */
+.audioUploadBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 7px;
+  background: rgba(79, 142, 247, 0.05);
+  border: 1.5px dashed rgba(79, 142, 247, 0.4);
+  border-radius: 10px;
+  padding: 14px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.audioUploadBox:hover {
+  border-color: #4f8ef7;
+  background: rgba(79, 142, 247, 0.1);
+  transform: translateY(-1px);
+}
+
+.audioUploadIcon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.audioUploadTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.audioUploadSubtitle {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+.audioRewindBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  color: #fde047;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.audioBrowseBtn {
+  background: linear-gradient(135deg, #4f8ef7, #3b82f6);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(79, 142, 247, 0.4);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.audioBrowseBtn:hover {
+  transform: scale(1.04);
+  background: #2563eb;
+}
+
+.audioFallbackRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 0.68rem;
+}
+
+.audioDemoLink {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.68rem;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.audioDemoLink:hover {
+  color: #7dd3fc;
+}
+
+/* Active Audio Card */
+.audioActiveCard {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.audioActiveHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.audioActiveInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.audioActiveIcon {
+  font-size: 1.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.audioActiveDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+.audioActiveName {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audioActiveDuration {
+  font-size: 0.64rem;
+  font-family: ui-monospace, monospace;
+  color: #6ee7b7;
+}
+
+.audioRewindAlert {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 0.66rem;
+  color: #fef08a;
+  line-height: 1.25;
+}
+
+.audioRewindIcon {
+  font-size: 0.95rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.audioActiveActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.audioPreviewToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.audioPreviewToggleBtn:hover {
+  background: rgba(16, 185, 129, 0.4);
+}
+
+.audioSmallBtn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.audioSmallBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+
+.audioRemoveBtn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.audioRemoveBtn:hover {
+  background: rgba(239, 68, 68, 0.28);
+  color: #ffffff;
+}
+
+/* Audio Volume Slider */
+.audioVolumeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0 0;
+}
+
+.audioVolumeIcon {
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.volumeSlider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  cursor: pointer;
+}
+
+.volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #10b981;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  transition: transform 0.15s;
+}
+
+.volumeSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
+}
+
+.volumePct {
+  font-size: 0.72rem;
+  font-family: ui-monospace, monospace;
+  color: #94a3b8;
+  min-width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+
+

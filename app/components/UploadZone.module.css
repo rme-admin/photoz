@@ -1,0 +1,86 @@
+.zone {
+  border: 2px dashed rgba(79, 142, 247, 0.4);
+  border-radius: 20px;
+  padding: 60px 40px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, rgba(79,142,247,0.06) 0%, transparent 70%);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.zone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(79,142,247,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.zone:hover,
+.dragOver {
+  border-color: rgba(79, 142, 247, 0.8);
+  background: radial-gradient(ellipse at center, rgba(79,142,247,0.12) 0%, transparent 70%);
+  box-shadow: 0 0 40px rgba(79,142,247,0.15), inset 0 0 40px rgba(79,142,247,0.05);
+  transform: scale(1.005);
+}
+
+.iconWrap {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.iconWrap svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #4f8ef7 0%, #7b5ea7 100%);
+  color: #fff;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(79,142,247,0.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(79,142,247,0.45);
+}
+
+.btnIcon {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.hiddenInput {
+  display: none;
+}

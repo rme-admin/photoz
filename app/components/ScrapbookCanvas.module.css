@@ -1,0 +1,633 @@
+.canvasWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* ── 9:16 portrait viewport backgrounds ── */
+.viewport {
+  height: min(calc(100vh - 180px), 560px);
+  aspect-ratio: 9 / 16;
+  width: auto;
+  max-width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  container-type: size;
+  container-name: scrapbook;
+  box-shadow:
+    0 0 0 2px rgba(79,142,247,0.35),
+    0 24px 64px rgba(0,0,0,0.55),
+    0 0 80px rgba(79,142,247,0.08);
+}
+
+.viewport_graph { background: #f5f0e8; }
+.viewport_lined { background: #fbf8f0; }
+.viewport_dots  { background: #f8f5ee; }
+.viewport_kraft { background: #ebdcc6; }
+.viewport_dark  { background: #121520; }
+
+/* ── Grid paper background styles ── */
+.gridBg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gridBg_graph {
+  background-image:
+    linear-gradient(rgba(150,170,220,0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(150,170,220,0.25) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+.gridBg_lined {
+  background-image:
+    linear-gradient(rgba(100,140,220,0.28) 1px, transparent 1px),
+    linear-gradient(90deg, transparent 38px, rgba(235,75,75,0.4) 38px, rgba(235,75,75,0.4) 40px, transparent 40px);
+  background-size: 100% 28px, 100% 100%;
+}
+
+.gridBg_dots {
+  background-image: radial-gradient(circle, rgba(120,140,190,0.4) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.gridBg_kraft {
+  background-image: repeating-linear-gradient(45deg, rgba(140,105,65,0.08) 0, rgba(140,105,65,0.08) 1px, transparent 0, transparent 20px);
+}
+
+.gridBg_dark {
+  background-image:
+    linear-gradient(rgba(79,142,247,0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,142,247,0.18) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* ── Scrolling strip ── */
+.strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  will-change: transform;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Individual frame card ── */
+.frameCard {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* ── Rotated photo frame (drop shadow follows cropped shape!) ── */
+.frameInner {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+  line-height: 0;
+  font-size: 0;
+  width: fit-content;
+  max-width: 100%;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.frameInner:hover {
+  transform: scale(1.025) !important;
+  z-index: 10;
+}
+
+/* ── Media wrapper strictly clipped to the random shape ── */
+.shapeMediaWrap {
+  display: block;
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  background: #ffffff;
+  line-height: 0;
+  font-size: 0;
+  overflow: hidden;
+}
+
+/* ── Border SVG hugging the exact contour of the shape ── */
+.borderSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ── Image / video inside the frame ── */
+.frameMedia {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 38cqh; /* caps vertical height so portrait media fits nicely */
+  object-fit: contain;
+}
+
+/* ── Washi tape sticker on top of frame ── */
+.tape {
+  position: absolute;
+  top: -8px;
+  width: 50px;
+  height: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+  border-left: 2px dashed rgba(180, 150, 70, 0.35);
+  border-right: 2px dashed rgba(180, 150, 70, 0.35);
+  pointer-events: none;
+  z-index: 5;
+  backdrop-filter: blur(1px);
+}
+
+/* ── Handwritten-style caption bubble ── */
+.captionBubble {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(245,240,232,0.96);
+  border: 1.5px solid #2252cc;
+  border-radius: 4px;
+  padding: 3px 8px 4px;
+  max-width: 85%;
+  z-index: 6;
+  box-shadow: 1px 1px 0 #1a3a99;
+}
+
+.captionBubble span {
+  font-family: 'Caveat', cursive;
+  font-size: 0.82rem;
+  color: #1a1a3a;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* ── Handwritten Scribble Tag / Mention on paper tape strip ── */
+.scribbleTag {
+  position: absolute;
+  background: #fef9c3;
+  color: #0f172a;
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.15;
+  padding: 4px 12px 5px;
+  border-radius: 2px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.22), 0 1px 3px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  z-index: 7;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  border-left: 2.5px dashed rgba(160, 130, 40, 0.45);
+  border-right: 2.5px dashed rgba(160, 130, 40, 0.45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 88%;
+}
+
+.scribbleText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.scribbleUnderlineSvg {
+  width: 100%;
+  height: 5px;
+  margin-top: 1px;
+  overflow: visible;
+}
+
+/* ── Side doodle decorations ── */
+.sideDoodle {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  z-index: 5;
+  opacity: 0.88;
+  pointer-events: none;
+}
+
+/* ── Top & bottom fade masks ── */
+.fadeMaskTop,
+.fadeMaskBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 12%;
+  pointer-events: none;
+  z-index: 8;
+}
+.fadeMaskTop {
+  top: 0;
+  background: linear-gradient(to bottom, #f5f0e8 0%, transparent 100%);
+}
+.fadeMaskBottom {
+  bottom: 0;
+  background: linear-gradient(to top, #f5f0e8 0%, transparent 100%);
+}
+
+/* ── Vintage scanlines ── */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.01) 2px,
+    rgba(0,0,0,0.01) 4px
+  );
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* ── Empty state ── */
+.emptyState {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d0 100%);
+}
+.emptyState p {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  color: rgba(50,50,80,0.35);
+  font-weight: 600;
+  text-align: center;
+  padding: 0 24px;
+}
+
+/* ── Gallery wall (end screen finale) ── */
+.galleryWall {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 20%, #1e243d 0%, #0d101d 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: fadeIn 0.35s ease;
+  z-index: 10;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.galleryHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 12px;
+  gap: 3px;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.gallerySparkle {
+  font-size: 1.2rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px #facc15);
+  animation: pulseSparkle 2s ease-in-out infinite;
+}
+
+@keyframes pulseSparkle {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.galleryTitle {
+  font-family: var(--font-marker, 'Caveat', cursive, sans-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.gallerySub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 2px 10px;
+  margin-top: 2px;
+}
+
+.galleryGrid {
+  display: grid;
+  width: 100%;
+  gap: 8px;
+  padding: 4px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-items: center;
+}
+
+.galleryItem {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  box-sizing: border-box;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.2s ease;
+  cursor: pointer;
+}
+
+.galleryItem:hover {
+  transform: scale(1.08) rotate(0deg) !important;
+  z-index: 15;
+}
+
+.galleryMediaWrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+}
+
+.galleryMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.galleryBorderSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.galleryCaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+  color: #ffffff;
+  font-size: 0.62rem;
+  padding: 6px 4px 2px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* ── Interactive Video Timeline Player Bar ── */
+.timelineBar {
+  width: min(100%, 360px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 21, 32, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 6px 10px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+  user-select: none;
+  z-index: 20;
+}
+
+.miniPlayBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #4f8ef7;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, background 0.15s ease;
+  box-shadow: 0 2px 8px rgba(79, 142, 247, 0.45);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  position: relative;
+  z-index: 10;
+}
+
+.miniPlayBtn:hover {
+  background: #3b77e3;
+  transform: scale(1.08);
+}
+
+.miniPlayBtn:active {
+  transform: scale(0.92);
+}
+
+.miniPlayBtn svg {
+  pointer-events: none;
+}
+
+.timeCurrent,
+.timeTotal {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.timeCurrent {
+  color: #f1f5f9;
+  font-weight: 600;
+  min-width: 32px;
+  text-align: right;
+}
+
+.timeTotal {
+  color: #64748b;
+  min-width: 32px;
+}
+
+.timelineTrack {
+  flex: 1;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.timelineRail {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  position: relative;
+  transition: height 0.15s ease;
+}
+
+.timelineTrack:hover .timelineRail {
+  height: 8px;
+}
+
+.timelineFill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f8ef7, #ec4899);
+  border-radius: 4px;
+  position: relative;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.6);
+}
+
+.timelineThumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #ec4899;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: transform 0.1s ease, width 0.1s ease, height 0.1s ease;
+}
+
+.timelineTrack:hover .timelineThumb {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.timelineSegment {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 1px;
+  z-index: 2;
+  cursor: pointer;
+  transition: background 0.15s ease, height 0.15s ease;
+}
+
+.timelineSegment:hover,
+.segmentActive {
+  background: #facc15;
+  width: 3px;
+  height: 12px;
+  top: -3px;
+  box-shadow: 0 0 6px rgba(250, 204, 21, 0.8);
+}
+
+.miniSoundBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.miniSoundBtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.soundMuted {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ── Mobile Viewport & Timeline Sizing (<= 900px) ── */
+@media (max-width: 900px) {
+  .canvasWrap {
+    gap: 8px;
+    height: 100%;
+    justify-content: center;
+  }
+
+  .viewport {
+    height: min(calc(100dvh - 200px), 460px);
+    max-height: 460px;
+    aspect-ratio: 9 / 16;
+    width: auto;
+    max-width: 90vw;
+  }
+
+  .timelineBar {
+    width: min(90vw, 330px);
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .timeCurrent,
+  .timeTotal {
+    font-size: 0.7rem;
+    min-width: 28px;
+  }
+
+  .miniPlayBtn {
+    width: 30px;
+    height: 30px;
+    touch-action: manipulation;
+  }
+
+  .miniSoundBtn {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+
