@@ -413,7 +413,7 @@ const ExportPanel = forwardRef(function ExportPanel(
     slideDuration,
     borderColor = '#2252cc',
     colorMode = 'multi',
-    shapeMode = 'random',
+    shapeMode = 'classic',
     selectedShapes = [],
     classicStyle = 'rounded',
     gridStyle = 'graph',
@@ -434,7 +434,6 @@ const ExportPanel = forwardRef(function ExportPanel(
   const [done, setDone] = useState(false);
   const [exportedFile, setExportedFile] = useState(null); // { blob, url, fileName, mime }
   const [copiedComment, setCopiedComment] = useState(false);
-  const [desktopGuide, setDesktopGuide] = useState(null); // 'whatsapp' | 'telegram' | null
 
   const abortRef = useRef(false);
   const recorderRef = useRef(null);
@@ -489,8 +488,6 @@ const ExportPanel = forwardRef(function ExportPanel(
       setTimeout(() => setCopiedComment(false), 3000);
     } catch (e) {}
 
-    // Display guided workflow and launch WhatsApp application
-    setDesktopGuide('whatsapp');
     launchNativeApp(`whatsapp://send?text=${encodeURIComponent(postCommentText)}`);
   }, [exportedFile, postCommentText, handleDownloadAgain]);
 
@@ -519,7 +516,6 @@ const ExportPanel = forwardRef(function ExportPanel(
       setCopiedComment(true);
       setTimeout(() => setCopiedComment(false), 3000);
     } catch (e) {}
-    setDesktopGuide('whatsapp');
     launchNativeApp(`whatsapp://send?text=${encodeURIComponent(postCommentText)}`);
   }, [exportedFile, postCommentText, handleDownloadAgain]);
 
@@ -548,7 +544,6 @@ const ExportPanel = forwardRef(function ExportPanel(
       setCopiedComment(true);
       setTimeout(() => setCopiedComment(false), 3000);
     } catch (e) {}
-    setDesktopGuide('telegram');
     launchNativeApp(`tg://msg?text=${encodeURIComponent(postCommentText)}`);
   }, [exportedFile, postCommentText, handleDownloadAgain]);
 
@@ -1038,7 +1033,6 @@ const ExportPanel = forwardRef(function ExportPanel(
     setDone(false);
     setError(null);
     setIsOpen(false);
-    setDesktopGuide(null);
   };
 
 
@@ -1323,70 +1317,7 @@ const ExportPanel = forwardRef(function ExportPanel(
               </div>
             )}
 
-            <div className={styles.videoShareNotice}>
-              <span>📹</span>
-              <span>
-                Your edited video is downloaded and ready to share! The comment below is included as the caption/chat message so viewers know it was created using Photoz.
-              </span>
-            </div>
 
-            {/* Desktop Guidance when WhatsApp/Telegram is opened on PC/Mac */}
-            {desktopGuide && (
-              <div className={styles.desktopGuideBox}>
-                <div className={styles.desktopGuideTitle}>
-                  <span>
-                    {desktopGuide === 'whatsapp' ? '💬 Opening WhatsApp App...' : '✈️ Opening Telegram App...'}
-                  </span>
-                  <button
-                    type="button"
-                    className={styles.closeGuideBtn}
-                    onClick={() => setDesktopGuide(null)}
-                    title="Close"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className={styles.desktopGuideStep}>
-                  <strong>1. App Launch:</strong> If the {desktopGuide === 'whatsapp' ? 'WhatsApp' : 'Telegram'} application is installed, it is opening directly!
-                </div>
-                <div className={styles.desktopGuideStep}>
-                  <strong>2. Video File:</strong> Saved in your <strong>Downloads</strong> folder as <code>{exportedFile?.fileName || 'photoz-memory.mp4'}</code>.
-                </div>
-                <div className={styles.desktopGuideStep}>
-                  <strong>3. Post Comment:</strong> Copied to your clipboard!
-                </div>
-                <div className={styles.desktopGuideStep}>
-                  <strong>4. In {desktopGuide === 'whatsapp' ? 'WhatsApp' : 'Telegram'}:</strong> Drag &amp; drop your video into the chat (or click 📎 <em>Attach</em> &rarr; <em>Photos &amp; Videos</em>), then paste (Cmd+V) your caption!
-                </div>
-                <div className={styles.desktopGuideActions}>
-                  <button
-                    type="button"
-                    className={styles.reopenAppBtn}
-                    onClick={() => {
-                      if (desktopGuide === 'whatsapp') {
-                        launchNativeApp(`whatsapp://send?text=${encodeURIComponent(postCommentText)}`);
-                      } else {
-                        launchNativeApp(`tg://msg?text=${encodeURIComponent(postCommentText)}`);
-                      }
-                    }}
-                  >
-                    Open {desktopGuide === 'whatsapp' ? 'WhatsApp' : 'Telegram'} App Again
-                  </button>
-                  <a
-                    href={
-                      desktopGuide === 'whatsapp'
-                        ? `https://web.whatsapp.com/send?text=${encodeURIComponent(postCommentText)}`
-                        : `https://web.telegram.org`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.webFallbackLink}
-                  >
-                    Don&apos;t have the desktop app? Open Web version &rarr;
-                  </a>
-                </div>
-              </div>
-            )}
 
             <div className={styles.specialtyBadge}>
               <span className={styles.sparkleIcon}>✨</span>
