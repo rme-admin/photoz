@@ -42,7 +42,7 @@ export default function PlaybackControls({
   onBorderColorChange,
   colorMode = 'multi',
   onColorModeChange,
-  shapeMode = 'random',
+  shapeMode = 'classic',
   onShapeModeChange,
   selectedShapes = [],
   onSelectedShapesChange,

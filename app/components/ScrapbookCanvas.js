@@ -57,7 +57,7 @@ const TAPE_COLORS = [
 ];
 
 // ── Deterministic placement generator ─────────────────────────────────────────
-function getPlacement(item, index, shapeMode = 'random', selectedShapes = [], classicStyle = 'rounded') {
+function getPlacement(item, index, shapeMode = 'classic', selectedShapes = [], classicStyle = 'rounded') {
   const seed = index * 47 + 19;
   const rand = (n) => {
     const x = Math.sin(seed + n * 17.123) * 10000;
@@ -382,7 +382,7 @@ const ScrapbookCanvas = forwardRef(function ScrapbookCanvas(
     onToggleGallery,
     borderColor = '#2252cc',
     colorMode = 'multi',
-    shapeMode = 'random',
+    shapeMode = 'classic',
     selectedShapes = [],
     classicStyle = 'rounded',
     gridStyle = 'graph',

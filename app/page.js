@@ -34,7 +34,7 @@ export default function Home() {
   const [showUpload,      setShowUpload]      = useState(true);
   const [borderColor,     setBorderColor]     = useState('#2252cc');
   const [colorMode,       setColorMode]       = useState('multi'); // 'multi' | 'single'
-  const [shapeMode,       setShapeMode]       = useState('random');// 'random' | 'classic'
+  const [shapeMode,       setShapeMode]       = useState('classic');// 'classic' | 'random'
   const [classicStyle,    setClassicStyle]    = useState('rounded'); // 'rounded' | 'rect' | 'paper-frame' | 'no-border' | 'paper-piece' | 'oval'
   const [selectedShapes,  setSelectedShapes]  = useState(() => SCRAPBOOK_SHAPES.map((s) => s.id));
   const [gridStyle,       setGridStyle]       = useState('graph'); // 'graph' | 'lined' | 'dots' | 'kraft' | 'dark'

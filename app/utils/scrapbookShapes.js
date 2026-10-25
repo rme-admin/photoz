@@ -475,7 +475,7 @@ export const CLASSIC_SHAPE = CLASSIC_FRAMES[0];
 export function getFrameShape(
   item,
   index,
-  shapeMode = 'random',
+  shapeMode = 'classic',
   selectedShapes = [],
   classicStyle = 'rounded'
 ) {
